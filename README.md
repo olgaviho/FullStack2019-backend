@@ -2,4 +2,4 @@
 
 This repository belongs to the course called FullStack.
 
-Tähän tulee linkki herokussa toimivaan appiin.
+[Heroku](https://person-backend.herokuapp.com/)
