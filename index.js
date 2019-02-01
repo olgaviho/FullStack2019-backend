@@ -63,15 +63,17 @@ app.post('/api/persons', (req, res, next) => {
 
 app.put('/api/persons/:id', (req, res, next) => {
   const body = req.body
-  const person = {
-    name: body.name,
-    number: body.number,
-  }
-  Person.findByIdAndUpdate(req.params.id, person, { new: body.number })
-    .then(updatedPerson => {
-      res.json(updatedPerson.toJSON())
+
+  Person.findById(req.params.id).then((person) => { 
+    if (person === null) {
+      throw "Henkilö on jo valitettavasti poistettu tietokannasta";
+    }
+    person.number = body.number
+    person.save().then(() => {
+      res.json(person.toJSON())
     })
-    .catch(error => next(error))
+      .catch(error => next(error))
+  }).catch(error => res.status(400).json({error}))
 })
 
 const errorHandler = (error, req, res, next) => {
@@ -80,7 +82,7 @@ const errorHandler = (error, req, res, next) => {
   if (error.name === 'CastError' && error.kind === 'ObjectId') {
     return res.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
-    return res.status(400).json( {error: error.message})
+    return res.status(400).json({ error: error.message })
   }
   next(error)
 }
