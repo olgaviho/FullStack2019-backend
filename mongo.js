@@ -15,13 +15,9 @@ mongoose.connect(url, { useNewUrlParser: true })
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
-    minlength: 3,
-    required: true
   },
   number: {
     type: String,
-    minlength: 8,
-    required: true
   }
 })
 
@@ -30,6 +26,7 @@ const Person = mongoose.model('Person', personSchema)
 
 if (process.argv.length < 4) {
   Person.find({}).then(result => {
+    console.log('puhelinluettelo:')
     result.forEach(person => {
       console.log(person.name, person.number)
 
